@@ -22,7 +22,8 @@ Route::middleware(['auth', 'dependencia'])->group(function() {
     })->name('redi.externo');
 });
 
+// Rutas para manejo de documentos
 Route::middleware('auth')->group(function() {
-    Route::post('/mesa/recibir', [MesaController::class, 'recibirTodos'])->name('mesa.recibir');
-    Route::post('/mesa/reenviar', [MesaController::class, 'reenviarTodos'])->name('mesa.reenviar');
+    Route::post('/mesa/recibir/{id}', [MesaController::class, 'recibir'])->name('mesa.recibir');
+    Route::post('/mesa/reenviar/{id}', [MesaController::class, 'reenviar'])->name('mesa.reenviar');
 });

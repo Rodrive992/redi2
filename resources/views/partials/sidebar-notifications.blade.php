@@ -1,9 +1,6 @@
 @php
-$pendientes = DB::table('mesa')
-    ->where('entregado_a', auth()->user()->name)
-    ->where('estado', 'Pendiente')
-    ->orderBy('fecha', 'desc')
-    ->get();
+use App\Models\Mesa;
+$pendientes = Mesa::pendientesDe(auth()->user()->name)->get();
 @endphp
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="notificationsSidebar">
@@ -18,15 +15,17 @@ $pendientes = DB::table('mesa')
             <div class="list-group-item">
                 <div class="d-flex w-100 justify-content-between align-items-start">
                     <div class="me-3">
-                        <h6 class="mb-1 small">{{ $doc->entrada }}</h6> <!-- Texto más pequeño -->
+                        <h6 class="mb-1 small">{{ $doc->entrada }}</h6>
                         <p class="mb-1 small">De: {{ $doc->dependencia }}</p>
                         <small class="text-muted d-block">ID: {{ $doc->id }}</small>
                         <small class="text-muted">Nombre: {{ $doc->nombre }}</small>
+                        @if($doc->observaciones)
+                            <small class="text-muted d-block mt-1">Obs: {{ $doc->observaciones }}</small>
+                        @endif
                     </div>
                     <small class="text-muted">{{ \Carbon\Carbon::parse($doc->fecha)->format('d/m/Y') }}</small>
                 </div>
                 
-                <!-- Botones por documento -->
                 <div class="d-flex gap-2 mt-2">
                     <button class="btn btn-sm btn-success recibir-doc" data-id="{{ $doc->id }}">
                         <i class="bi bi-check-circle"></i> Recibir
@@ -49,6 +48,18 @@ $pendientes = DB::table('mesa')
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+
     // Recibir documento individual
     document.querySelectorAll('.recibir-doc').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -58,11 +69,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     }
-                }).then(response => response.json())
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error en la respuesta');
+                    return response.json();
+                })
                 .then(data => {
-                    if (data.success) location.reload();
+                    if (data.success) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Documento recibido'
+                        });
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error al recibir'
+                    });
                 });
             }
         });
@@ -80,11 +109,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 `,
                 confirmButtonText: 'Reenviar',
                 showCancelButton: true,
+                focusConfirm: false,
                 preConfirm: () => {
-                    return {
-                        destino: document.getElementById('destino').value,
-                        observaciones: document.getElementById('observaciones').value
+                    const destino = Swal.getPopup().querySelector('#destino').value;
+                    if (!destino) {
+                        Swal.showValidationMessage('El destinatario es obligatorio');
+                        return false;
                     }
+                    return {
+                        destino: destino,
+                        observaciones: Swal.getPopup().querySelector('#observaciones').value
+                    };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -92,12 +127,30 @@ document.addEventListener('DOMContentLoaded', function() {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify(result.value)
-                    }).then(response => response.json())
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error en la respuesta');
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data.success) location.reload();
+                        if (data.success) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Documento reenviado'
+                            });
+                            setTimeout(() => location.reload(), 1000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Error al reenviar'
+                        });
                     });
                 }
             });
