@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-            <i class="bi bi-box-seam"></i> REDI 2.0
+            <i class="bi bi-share"></i> REDI 2.0
         </a>
 
         <div class="d-flex flex-column text-center text-white mx-auto">

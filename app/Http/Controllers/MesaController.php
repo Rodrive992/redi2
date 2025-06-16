@@ -4,40 +4,55 @@ namespace App\Http\Controllers;
 
 use App\Models\Mesa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MesaController extends Controller
 {
     public function recibir($id)
     {
-        $mesa = Mesa::findOrFail($id);
-        
-        $mesa->update([
-            'estado' => 'Recibido',
-            'recibido_por' => Auth::user()->name,
-            'fecha_recibido' => now()
-        ]);
+        try {
+            $documento = Mesa::findOrFail($id);
+            
+            $documento->update([
+                'estado' => 'Recibido'
+            ]);
 
-        return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento recibido correctamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al recibir el documento: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function reenviar($id, Request $request)
     {
         $request->validate([
-            'destino' => 'required|string|max:255',
-            'observaciones' => 'nullable|string'
+            'destino' => 'required|string|max:255'
         ]);
 
-        $mesa = Mesa::findOrFail($id);
-        
-        $mesa->update([
-            'entregado_a' => $request->destino,
-            'observaciones' => $request->observaciones,
-            'estado' => 'Reenviado',
-            'reenviado_por' => Auth::user()->name,
-            'fecha_reenviado' => now()
-        ]);
+        try {
+            $documento = Mesa::findOrFail($id);
+            
+            $documento->update([
+                'entregado_a' => $request->destino,
+                'estado' => 'Pendiente'
+            ]);
 
-        return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento reenviado correctamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al reenviar el documento'
+            ], 500);
+        }
     }
 }

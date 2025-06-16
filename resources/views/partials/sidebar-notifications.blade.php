@@ -45,117 +45,169 @@ $pendientes = Mesa::pendientesDe(auth()->user()->name)->get();
     </div>
 </div>
 
-@section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
+// Configuración de Toast
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true
+});
+
+// Función para manejar recepción
+async function manejarRecepcion(docId) {
+    try {
+        const response = await fetch(`/mesa/recibir/${docId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Error en el servidor');
+        }
+
+        Toast.fire({
+            icon: 'success',
+            title: data.message
+        });
+        
+        setTimeout(() => location.reload(), 1000);
+        
+    } catch (error) {
+        Toast.fire({
+            icon: 'error',
+            title: 'Error al recibir',
+            text: error.message
+        });
+    }
+}
+
+// Función para manejar reenvío (versión mejorada)
+async function manejarReenvio(docId) {
+    const { value: formValues, isDismissed } = await Swal.fire({
+        title: '<strong>Reenviar Documento</strong>',
+        html: `
+            <div class="mb-3">
+                <label class="form-label">Destinatario</label>
+                <select id="destino" class="form-select">
+                    <option disabled selected value="">Seleccione un destinatario</option>
+                    <option value="Ciro">Ciro</option>
+                    <option value="Renato">Renato</option>
+                    <option value="Ceci">Ceci</option>
+                    <option value="Camila">Camila</option>
+                    <option value="Rodri">Rodrigo</option>
+                    <option value="Pato">Patricio</option>
+                    <option value="Flavia">Flavia</option>
+                    <option value="Ale">Ale</option>
+                    <option value="Adri">Adriana</option>
+                    <option value="Rosana">Rosana</option>
+                    <option value="Laura">Laura</option>
+                    <option value="Vale">Valeria</option>
+                    <option value="Nico">Nico</option>
+                </select>
+            </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: '<i class="bi bi-send"></i> Reenviar',
+        cancelButtonText: '<i class="bi bi-x-circle"></i> Cancelar',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        customClass: {
+            popup: 'rounded-3',
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger'
+        },
+        preConfirm: () => {
+            const destino = Swal.getPopup().querySelector('#destino').value;
+            if (!destino) {
+                Swal.showValidationMessage('Debe seleccionar un destinatario');
+                return false;
+            }
+            return { destino };
         }
     });
 
-    // Recibir documento individual
-    document.querySelectorAll('.recibir-doc').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const docId = this.getAttribute('data-id');
-            if (confirm('¿Confirmar recepción de este documento?')) {
-                fetch(`/mesa/recibir/${docId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Error en la respuesta');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Documento recibido'
-                        });
-                        setTimeout(() => location.reload(), 1000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Error al recibir'
-                    });
-                });
-            }
+    // Si el usuario hizo clic en Cancelar
+    if (isDismissed) {
+        Toast.fire({
+            icon: 'info',
+            title: 'Reenvío cancelado'
         });
-    });
+        return;
+    }
 
-    // Reenviar documento individual
-    document.querySelectorAll('.reenviar-doc').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const docId = this.getAttribute('data-id');
+    // Si confirmó el reenvío
+    if (formValues) {
+        try {
+            const response = await fetch(`/mesa/reenviar/${docId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formValues)
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Error en el servidor');
+            }
+
+            Toast.fire({
+                icon: 'success',
+                title: data.message
+            });
+            
+            setTimeout(() => location.reload(), 1000);
+            
+        } catch (error) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Error al reenviar',
+                text: error.message
+            });
+        }
+    }
+}
+
+// Eventos cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Delegación de eventos
+    document.addEventListener('click', function(e) {
+        // Manejar botón Recibir
+        if (e.target.closest('.recibir-doc')) {
+            e.preventDefault();
+            const docId = e.target.closest('.recibir-doc').dataset.id;
+            
             Swal.fire({
-                title: 'Reenviar Documento',
-                html: `
-                    <input type="text" id="destino" class="swal2-input" placeholder="Destinatario" required>
-                    <textarea id="observaciones" class="swal2-textarea" placeholder="Observaciones"></textarea>
-                `,
-                confirmButtonText: 'Reenviar',
+                title: '¿Confirmar recepción?',
+                text: `Estás por marcar el documento ${docId} como recibido`,
+                icon: 'question',
                 showCancelButton: true,
-                focusConfirm: false,
-                preConfirm: () => {
-                    const destino = Swal.getPopup().querySelector('#destino').value;
-                    if (!destino) {
-                        Swal.showValidationMessage('El destinatario es obligatorio');
-                        return false;
-                    }
-                    return {
-                        destino: destino,
-                        observaciones: Swal.getPopup().querySelector('#observaciones').value
-                    };
-                }
+                confirmButtonText: 'Sí, recibir',
+                cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/mesa/reenviar/${docId}`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(result.value)
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Error en la respuesta');
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Documento reenviado'
-                            });
-                            setTimeout(() => location.reload(), 1000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Error al reenviar'
-                        });
-                    });
+                    manejarRecepcion(docId);
                 }
             });
-        });
+        }
+        
+        // Manejar botón Reenviar
+        if (e.target.closest('.reenviar-doc')) {
+            e.preventDefault();
+            const docId = e.target.closest('.reenviar-doc').dataset.id;
+            manejarReenvio(docId);
+        }
     });
 });
 </script>
-@endsection

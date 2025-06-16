@@ -7,20 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class Mesa extends Model
 {
     protected $table = 'mesa';
+    
     protected $fillable = [
-        'entrada', 'dependencia', 'nombre', 
-        'estado', 'entregado_a', 'recibido_por',
-        'fecha', 'fecha_recibido', 'observaciones',
-        'reenviado_por', 'fecha_reenviado'
+        'usuario',
+        'entrada',
+        'nombre',
+        'dependencia',
+        'entregado_a',
+        'estado',
+        'fecha'  // Solo las columnas que realmente existen
     ];
     
+    // Solo incluir 'fecha' si necesitas que se maneje como objeto Carbon
     protected $dates = [
-        'fecha',
-        'fecha_recibido',
-        'fecha_reenviado',
-        'created_at',
-        'updated_at'
+        'fecha'  // Eliminados created_at y updated_at que no existen
     ];
+    
+    // Desactivar timestamps automáticos
+    public $timestamps = false;
     
     public function scopePendientesDe($query, $usuario)
     {
