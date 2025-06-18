@@ -42,6 +42,9 @@ Route::middleware(['auth', 'dependencia'])->group(function() {
     Route::prefix('mesa')->group(function() {
         Route::post('/registrar', [MesaController::class, 'registrar'])->name('mesa.registrar');
         Route::get('/buscar', [MesaController::class, 'buscar'])->name('mesa.buscar');
+        Route::get('/editar/{id}', [MesaController::class, 'editar'])->name('mesa.editar');
+        Route::put('/actualizar/{id}', [MesaController::class, 'actualizar'])->name('mesa.actualizar');
+        Route::delete('/eliminar/{id}', [MesaController::class, 'eliminar'])->name('mesa.eliminar');
     });
 });
 

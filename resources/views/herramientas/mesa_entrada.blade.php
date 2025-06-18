@@ -91,11 +91,11 @@
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-outline-primary px-2 py-1 editar-btn" 
                                                 title="Editar" data-id="{{ $mesa->id }}" data-bs-toggle="modal" 
-                                                data-bs-target="#editarModal">
+                                                data-bs-target="#editarModal" onclick="manejarEdicion({{ $mesa->id }})">
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <button class="btn btn-sm btn-outline-danger px-2 py-1 eliminar-btn" 
-                                                title="Eliminar" data-id="{{ $mesa->id }}">
+                                                title="Eliminar" data-id="{{ $mesa->id }}" onclick="manejarEliminacion({{ $mesa->id }})">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -239,175 +239,113 @@
     </div>
 </div>
 
-@section('scripts')
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Configuración de Toast
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Función de depuración para manejar la edición
+        window.manejarEdicion = async function(docId) {
+            console.log('Iniciando edición para el documento con ID:', docId);
 
-    // Función para manejar la edición
-    async function manejarEdicion(docId) {
-        try {
-            // Obtener datos del documento
-            const response = await fetch(`/mesa/editar/${docId}`, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error('Error al cargar datos para editar');
-            }
-            
-            const data = await response.json();
-            
-            // Llenar el modal con los datos
-            document.getElementById('editar_id').value = data.id;
-            document.getElementById('editar_entrada').value = data.entrada;
-            document.getElementById('editar_nombre').value = data.nombre;
-            document.getElementById('editar_dependencia').value = data.dependencia;
-            
-            // Seleccionar el destinatario correcto
-            const select = document.getElementById('editar_entregado_a');
-            select.value = data.entregado_a;
-            
-            // Configurar la acción del formulario
-            document.getElementById('editarForm').action = `/mesa/actualizar/${data.id}`;
-            
-            // Mostrar el modal
-            const modal = new bootstrap.Modal(document.getElementById('editarModal'));
-            modal.show();
-            
-        } catch (error) {
-            console.error('Error:', error);
-            Toast.fire({
-                icon: 'error',
-                title: 'Error al cargar datos',
-                text: error.message
-            });
-        }
-    }
-
-    // Función para manejar la actualización
-    async function manejarActualizacion(event) {
-        event.preventDefault();
-        
-        const form = event.target;
-        const formData = new FormData(form);
-        const docId = formData.get('id');
-        
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json',
-                    'X-HTTP-Method-Override': 'PUT'
-                },
-                body: formData
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Error en el servidor');
-            }
-            
-            Toast.fire({
-                icon: 'success',
-                title: data.message
-            });
-            
-            // Cerrar el modal y recargar
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editarModal'));
-            modal.hide();
-            
-            setTimeout(() => location.reload(), 1000);
-            
-        } catch (error) {
-            console.error('Error:', error);
-            Toast.fire({
-                icon: 'error',
-                title: 'Error al actualizar',
-                text: error.message
-            });
-        }
-    }
-
-    // Función para manejar eliminación
-    async function manejarEliminacion(docId) {
-        try {
-            const result = await Swal.fire({
-                title: '¿Eliminar registro?',
-                text: "Esta acción no se puede deshacer",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            });
-            
-            if (result.isConfirmed) {
-                const response = await fetch(`/mesa/eliminar/${docId}`, {
-                    method: 'DELETE',
+            try {
+                const response = await fetch(`/mesa/editar/${docId}`, {
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json'
                     }
                 });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.message || 'Error en el servidor');
-                }
-                
-                Toast.fire({
-                    icon: 'success',
-                    title: data.message
-                });
-                
-                setTimeout(() => location.reload(), 1000);
-            }
-            
-        } catch (error) {
-            console.error('Error:', error);
-            Toast.fire({
-                icon: 'error',
-                title: 'Error al eliminar',
-                text: error.message
-            });
-        }
-    }
 
-    // Eventos cuando el DOM está listo
-    document.addEventListener('DOMContentLoaded', function() {
-        // Configurar el evento de envío del formulario de edición
-        document.getElementById('editarForm').addEventListener('submit', manejarActualizacion);
-        
-        // Delegación de eventos para los botones
-        document.addEventListener('click', function(e) {
-            // Manejar botón Editar
-            if (e.target.closest('.editar-btn')) {
-                e.preventDefault();
-                const docId = e.target.closest('.editar-btn').dataset.id;
-                manejarEdicion(docId);
+                if (!response.ok) {
+                    console.error('Error al obtener los datos para editar');
+                    throw new Error('Error al cargar datos para editar');
+                }
+
+                const data = await response.json();
+                console.log('Datos cargados para la edición:', data);
+
+                // Llenar el modal con los datos
+                document.getElementById('editar_id').value = data.id;
+                document.getElementById('editar_entrada').value = data.entrada;
+                document.getElementById('editar_nombre').value = data.nombre;
+                document.getElementById('editar_dependencia').value = data.dependencia;
+                const select = document.getElementById('editar_entregado_a');
+                select.value = data.entregado_a;
+
+                // Configurar la acción del formulario
+                document.getElementById('editarForm').action = `/mesa/actualizar/${data.id}`;
+
+                console.log('Formulario de edición configurado con la URL:', document.getElementById('editarForm').action);
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('editarModal'));
+                modal.show();
+                console.log('Modal de edición abierto');
+
+            } catch (error) {
+                console.error('Error en manejarEdicion:', error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error al cargar datos',
+                    text: error.message
+                });
             }
-            
-            // Manejar botón Eliminar
-            if (e.target.closest('.eliminar-btn')) {
-                e.preventDefault();
-                const docId = e.target.closest('.eliminar-btn').dataset.id;
-                manejarEliminacion(docId);
+        }
+
+        // Función de depuración para manejar la eliminación
+        window.manejarEliminacion = async function(docId) {
+            console.log('Iniciando eliminación para el documento con ID:', docId);
+
+            try {
+                const result = await Swal.fire({
+                    title: '¿Eliminar registro?',
+                    text: "Esta acción no se puede deshacer",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                });
+
+                if (result.isConfirmed) {
+                    console.log('Eliminación confirmada para el documento con ID:', docId);
+
+                    const response = await fetch(`/mesa/eliminar/${docId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        console.error('Error al eliminar el documento');
+                        throw new Error(data.message || 'Error en el servidor');
+                    }
+
+                    console.log('Documento eliminado con éxito:', data);
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    });
+
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    console.log('Eliminación cancelada');
+                }
+
+            } catch (error) {
+                console.error('Error en manejarEliminacion:', error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error al eliminar',
+                    text: error.message
+                });
             }
-        });
+        }
     });
 </script>
+
 @endsection
