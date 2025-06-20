@@ -11,7 +11,7 @@
             'asistencia' => ['icon' => 'bi-calendar-check', 'text' => 'Asistencia'],
             'vencimientos' => ['icon' => 'bi-clock-history', 'text' => 'Vencimientos'],
             'real_prestacion' => ['icon' => 'bi-graph-up', 'text' => 'Real Prestación'],
-            'plantas' => ['icon' => 'bi-building', 'text' => 'Plantas'],
+            'consultar_bases' => ['icon' => 'bi-clipboard-check', 'text' => 'Consultar Bases'],
             'carga_bases' => ['icon' => 'bi-database', 'text' => 'Carga de Bases'],
             'suma_horarios' => ['icon' => 'bi-calculator', 'text' => 'Suma Horarios']
         ] as $route => $options)

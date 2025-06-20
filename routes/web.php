@@ -33,7 +33,7 @@ Route::middleware(['auth', 'dependencia'])->group(function() {
         Route::get('/asistencia', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
         Route::get('/vencimientos', [HerramientasController::class, 'vencimientos'])->name('herramientas.vencimientos');
         Route::get('/real-prestacion', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
-        Route::get('/plantas', [HerramientasController::class, 'plantas'])->name('herramientas.plantas');
+        Route::get('/consultar- bases', [HerramientasController::class, 'consultarBases'])->name('herramientas.consultar_bases');
         Route::get('/carga-bases', [HerramientasController::class, 'cargaBases'])->name('herramientas.carga_bases');
         Route::get('/suma-horarios', [HerramientasController::class, 'sumaHorarios'])->name('herramientas.suma_horarios');
     });

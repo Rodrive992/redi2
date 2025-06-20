@@ -73,35 +73,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($mesas as $mesa)
-                                <tr>
-                                    <td>{{ $mesa->id }}</td>
-                                    <td>{{ $mesa->usuario }}</td>
-                                    <td>{{ $mesa->entrada }}</td>
-                                    <td>{{ $mesa->nombre }}</td>
-                                    <td>{{ $mesa->dependencia }}</td>
-                                    <td>{{ $mesa->entregado_a }}</td>
-                                    <td>
-                                        <span class="badge rounded-pill bg-{{ $mesa->estado == 'Pendiente' ? 'warning text-dark' : 'success' }}">
-                                            {{ $mesa->estado }}
-                                        </span>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($mesa->fecha)->format('d/m/Y') }}</td>
-                                    @if(auth()->user()->desempenio === 'mesa_entrada')
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-primary px-2 py-1 editar-btn" 
-                                                title="Editar" data-id="{{ $mesa->id }}" data-bs-toggle="modal" 
-                                                data-bs-target="#editarModal" onclick="manejarEdicion({{ $mesa->id }})">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger px-2 py-1 eliminar-btn" 
-                                                title="Eliminar" data-id="{{ $mesa->id }}" onclick="manejarEliminacion({{ $mesa->id }})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </td>
-                                    @endif
-                                </tr>
-                                @endforeach
+                                    @foreach($mesas as $mesa)
+                                    <tr>
+                                        <td>{{ $mesa->id }}</td>
+                                        <td>{{ $mesa->usuario }}</td>
+                                        <td>{{ $mesa->entrada }}</td>
+                                        <td>{{ $mesa->nombre }}</td>
+                                        <td>{{ $mesa->dependencia }}</td>
+                                        <td>{{ $mesa->entregado_a }}</td>
+                                        <td>
+                                            <span class="badge rounded-pill bg-{{ $mesa->estado == 'Pendiente' ? 'warning text-dark' : 'success' }}">
+                                                {{ $mesa->estado }}
+                                            </span>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($mesa->fecha)->format('d/m/Y') }}</td>
+                                        @if(auth()->user()->desempenio === 'mesa_entrada')
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary px-2 py-1 editar-btn" 
+                                                    title="Editar" data-id="{{ $mesa->id }}" data-bs-toggle="modal" 
+                                                    data-bs-target="#editarModal" onclick="manejarEdicion({{ $mesa->id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger px-2 py-1 eliminar-btn" 
+                                                    title="Eliminar" data-id="{{ $mesa->id }}" onclick="manejarEliminacion({{ $mesa->id }})">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                        @endif
+                                    </tr>
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -127,7 +127,7 @@
         <div class="modal-content">
             <div class="modal-header bg-light">
                 <h5 class="modal-title" id="registrarModalLabel">
-                    <i class="bi bi-plus-circle me-1"></i> Nuevo Registro
+                    <i class="bi bi-plus-circle me-1"></i> Registro Mesa de Entrada
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -135,11 +135,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="entrada" class="form-label small text-muted">Número de Entrada</label>
+                        <label for="entrada" class="form-label small text-muted">Entrada</label>
                         <input type="text" class="form-control form-control-sm" id="entrada" name="entrada" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nombre" class="form-label small text-muted">Nombre del Documento</label>
+                        <label for="nombre" class="form-label small text-muted">Nombre</label>
                         <input type="text" class="form-control form-control-sm" id="nombre" name="nombre" required>
                     </div>
                     <div class="mb-3">
@@ -241,111 +241,212 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Función de depuración para manejar la edición
-        window.manejarEdicion = async function(docId) {
-            console.log('Iniciando edición para el documento con ID:', docId);
+    // Configuración de Toast (con verificación de existencia)
+    if (typeof Toast === 'undefined') {
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+        });
+    }
+        // Función para manejar el envío del formulario de registro
+        document.addEventListener('DOMContentLoaded', function() {
+        
+        const formRegistrar = document.querySelector('form[action="{{ route('mesa.registrar') }}"]');
+        
+        formRegistrar.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar el envío del formulario de manera tradicional
+
+            const formData = new FormData(formRegistrar);
 
             try {
-                const response = await fetch(`/mesa/editar/${docId}`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                const response = await fetch(formRegistrar.action, {
+                    method: 'POST',
+                    body: formData
                 });
 
+                const data = await response.json();
+
                 if (!response.ok) {
-                    console.error('Error al obtener los datos para editar');
-                    throw new Error('Error al cargar datos para editar');
+                    throw new Error('Error al crear el registro');
                 }
 
-                const data = await response.json();
-                console.log('Datos cargados para la edición:', data);
+                console.log('Registro creado correctamente:', data);
 
-                // Llenar el modal con los datos
-                document.getElementById('editar_id').value = data.id;
-                document.getElementById('editar_entrada').value = data.entrada;
-                document.getElementById('editar_nombre').value = data.nombre;
-                document.getElementById('editar_dependencia').value = data.dependencia;
-                const select = document.getElementById('editar_entregado_a');
-                select.value = data.entregado_a;
+                // Mostrar el mensaje con Toast
+                Toast.fire({
+                    icon: 'success',
+                    title: data.message
+                });
 
-                // Configurar la acción del formulario
-                document.getElementById('editarForm').action = `/mesa/actualizar/${data.id}`;
-
-                console.log('Formulario de edición configurado con la URL:', document.getElementById('editarForm').action);
-
-                // Mostrar el modal
-                const modal = new bootstrap.Modal(document.getElementById('editarModal'));
-                modal.show();
-                console.log('Modal de edición abierto');
-
+                // Recargar la página o redirigir, dependiendo de la lógica
+                setTimeout(() => {
+                    location.reload(); // Recargar la página después de mostrar el mensaje
+                }, 1000);
             } catch (error) {
-                console.error('Error en manejarEdicion:', error);
+                console.error('Error al registrar el registro:', error);
                 Toast.fire({
                     icon: 'error',
-                    title: 'Error al cargar datos',
+                    title: 'Error al crear el registro',
                     text: error.message
                 });
             }
-        }
+        });
+    });
 
-        // Función de depuración para manejar la eliminación
-        window.manejarEliminacion = async function(docId) {
-            console.log('Iniciando eliminación para el documento con ID:', docId);
+    // Función para manejar la edición
+    function manejarEdicion(docId) {
+        console.log(`Iniciando edición para documento ID: ${docId}`);
+        
+        fetch(`/mesa/editar/${docId}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos recibidos:', data);
+            
+            // Llenar el formulario de edición
+            document.getElementById('editar_id').value = data.id;
+            document.getElementById('editar_entrada').value = data.entrada;
+            document.getElementById('editar_nombre').value = data.nombre;
+            document.getElementById('editar_dependencia').value = data.dependencia;
+            document.getElementById('editar_entregado_a').value = data.entregado_a;
+            
+            // Configurar la acción del formulario
+            document.getElementById('editarForm').action = `/mesa/actualizar/${data.id}`;
+            
+            // Mostrar el modal usando el método nativo de Bootstrap
+            var modalEl = document.getElementById('editarModal');
+            var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error en manejarEdicion:', error);
+            Toast.fire({
+                icon: 'error',
+                title: 'Error al cargar datos',
+                text: error.message
+            });
+        });
+    }
 
-            try {
-                const result = await Swal.fire({
-                    title: '¿Eliminar registro?',
-                    text: "Esta acción no se puede deshacer",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                });
-
-                if (result.isConfirmed) {
-                    console.log('Eliminación confirmada para el documento con ID:', docId);
-
-                    const response = await fetch(`/mesa/eliminar/${docId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        console.error('Error al eliminar el documento');
-                        throw new Error(data.message || 'Error en el servidor');
+    // Función para manejar la eliminación
+    function manejarEliminacion(docId) {
+        Swal.fire({
+            title: '¿Confirmar eliminación?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(`Eliminando documento ID: ${docId}`);
+                
+                fetch(`/mesa/eliminar/${docId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
                     }
-
-                    console.log('Documento eliminado con éxito:', data);
-
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error en el servidor');
+                    return response.json();
+                })
+                .then(data => {
                     Toast.fire({
                         icon: 'success',
                         title: data.message
                     });
-
                     setTimeout(() => location.reload(), 1000);
-                } else {
-                    console.log('Eliminación cancelada');
-                }
-
-            } catch (error) {
-                console.error('Error en manejarEliminacion:', error);
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Error al eliminar',
-                    text: error.message
+                })
+                .catch(error => {
+                    console.error('Error en manejarEliminacion:', error);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error al eliminar',
+                        text: error.message
+                    });
                 });
             }
+        });
+    }
+
+    // Configuración cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM completamente cargado');
+        
+        // Configurar el formulario de edición
+        const editarForm = document.getElementById('editarForm');
+        if (editarForm) {
+            editarForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Enviando formulario de edición');
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'X-HTTP-Method-Override': 'PUT'
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al actualizar');
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Respuesta del servidor:', data);
+                    
+                    // Cerrar el modal usando el método nativo
+                    var modalEl = document.getElementById('editarModal');
+                    var modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+                    
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    });
+                    
+                    setTimeout(() => location.reload(), 1000);
+                })
+                .catch(error => {
+                    console.error('Error al enviar formulario:', error);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error al guardar cambios',
+                        text: error.message
+                    });
+                });
+            });
+        }
+        
+        // Eliminar cualquier event listener previo del botón Cancelar
+        const cancelButton = document.querySelector('#editarModal .btn-outline-secondary');
+        if (cancelButton) {
+            // Clonar el botón para eliminar listeners
+            const newCancelButton = cancelButton.cloneNode(true);
+            cancelButton.parentNode.replaceChild(newCancelButton, cancelButton);
+            
+            // El cierre del modal ahora se manejará automáticamente por Bootstrap
+            // gracias al atributo data-bs-dismiss="modal"
         }
     });
 </script>
-
 @endsection

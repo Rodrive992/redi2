@@ -79,10 +79,10 @@ class HerramientasController extends Controller
     /**
      * Muestra la herramienta Plantas
      */
-    public function plantas()
+    public function consultarBases()
     {
-        return view('herramientas.plantas', [
-            'title' => 'Plantas'
+        return view('herramientas.consultar_bases', [
+            'title' => 'Consultar Bases'
         ]);
     }
 

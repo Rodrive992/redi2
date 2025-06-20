@@ -30,6 +30,6 @@ class Mesa extends Model
     {
         return $query->where('entregado_a', $usuario)
                     ->where('estado', 'Pendiente')
-                    ->orderBy('fecha', 'desc');
+                    ->orderBy('id', 'desc');
     }
 }
