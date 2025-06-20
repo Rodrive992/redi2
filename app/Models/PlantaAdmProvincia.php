@@ -11,19 +11,12 @@ class PlantaAdmProvincia extends Model
     
     // Definir las columnas que se pueden llenar (mass assignable)
     protected $fillable = [
-        'id_cargo',
-        'nombre',
-        'dni',
-        'dependencia',
-        'cargo',
-        'caracter',
-        'dedicacion',
-        'puntaje',
-        'hs',
-        'licencia',
-        'alta_cargo',
-        'alta_licencia',
-        'baja_licencia'
+        'id_cargo', 'legajo', 'nombre', 'dni', 'fecha_ingreso', 
+        'dependencia', 'dependencia_comp', 'escalafon', 'agrupamiento', 
+        'subrogancia', 'cargo', 'nro_cargo', 'caracter', 'dedicacion', 
+        'alta_cargo', 'vencimiento_cargo', 'hs', 
+        'licencia', 'desempenio', 'estado_baja', 
+        'puntaje', 'alta_licencia', 'baja_licencia'
     ];
     
     // Si las fechas están en formato específico, debes indicarlo

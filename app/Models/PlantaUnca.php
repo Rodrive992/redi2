@@ -15,9 +15,9 @@ class PlantaUnca extends Model
         'id_cargo', 'legajo', 'nombre', 'dni', 'fecha_ingreso', 
         'dependencia', 'dependencia_comp', 'escalafon', 'agrupamiento', 
         'subrogancia', 'cargo', 'nro_cargo', 'caracter', 'dedicacion', 
-        'alta_cargo', 'vencimiento_cargo', 'vencimiento_cargo1', 'hs', 
-        'licencia', 'desempenio', 'estado_baja', 'fecha_observ', 
-        'estado_observ', 'puntaje', 'alta_licencia', 'baja_licencia'
+        'alta_cargo', 'vencimiento_cargo', 'hs', 
+        'licencia', 'desempenio', 'estado_baja', 
+        'puntaje', 'alta_licencia', 'baja_licencia'
     ];
 
     // No necesitamos timestamps automáticos, ya que la tabla no tiene `created_at` y `updated_at`

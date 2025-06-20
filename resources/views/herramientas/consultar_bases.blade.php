@@ -33,36 +33,96 @@
                     @endif
 
                     <!-- Barra de herramientas -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="col-md-4">
-                            <form action="{{ route('herramientas.consultar_bases') }}" method="GET">
+                    <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-2 rounded">
+                        <form action="{{ route('herramientas.consultar_bases') }}" method="GET" class="d-flex align-items-center gap-2 w-100 me-3">
+                            <!-- Selector de Base -->
+                            <div class="flex-grow-1" style="max-width: 220px;">
                                 <div class="input-group input-group-sm">
-                                    <input type="text" name="search" class="form-control form-control-sm" 
-                                           placeholder="Buscar registros..." value="{{ request('search') }}">
-                                    <button class="btn btn-outline-secondary" type="submit">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-database"></i>
+                                    </span>
+                                    <select name="base" id="base" class="form-select form-select-sm">
+                                        <option value="" disabled selected>Elegir base...</option>
+                                        <option value="educacion" {{ ($base ?? '') == 'educacion' ? 'selected' : '' }}>Educación Provincia</option>
+                                        <option value="administracion" {{ ($base ?? '') == 'administracion' ? 'selected' : '' }}>Administración Provincia</option>
+                                        <option value="unca" {{ ($base ?? '') == 'unca' ? 'selected' : '' }}>Planta Unca</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Campo de Búsqueda -->
+                            <div class="flex-grow-1">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Buscar registros..." value="{{ $search ?? '' }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
+                        
+                        <!-- Botón de Exportar -->
+                        @if(isset($base) && $base)
+                        <form action="{{ route('herramientas.exportar_bases') }}" method="GET" class="ms-auto">
+                            <input type="hidden" name="base" value="{{ $base }}">
+                            <input type="hidden" name="search" value="{{ $search ?? '' }}">
+                            <button type="submit" class="btn btn-success btn-sm" title="Exportar a Excel">
+                                <i></i> Exportar
+                            </button>
+                        </form>
+                        @endif
                     </div>
 
                     <!-- Tabla de registros -->
+                    @if(isset($results) && $results->count())
                     <div class="table-responsive">
                         <table class="table table-sm table-hover table-bordered">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="5%">ID</th>
-                                    <th width="10%">Usuario</th>
-                                    <th width="10%">Entrada</th>
-                                    <th width="15%">Nombre</th>
-                                    <th width="15%">Dependencia</th>
-                                    <th width="12%">Entregado a</th>
-                                    <th width="8%">Estado</th>
-                                    <th width="10%">Fecha</th>
+                                    <th>Legajo</th>
+                                    <th>Nombre</th>
+                                    <th>DNI</th>
+                                    <th>Ingreso</th>
+                                    <th>Dependencia</th>
+                                    <th>Desempeño</th>
+                                    <th>Cargo</th>
+                                    <th>Escalafón</th>
+                                    <th>Agrupamiento</th>
+                                    <th>Subrogancia</th>
+                                    <th>Caracter</th>
+                                    <th>Dedicación</th>
+                                    <th>Alta</th>
+                                    <th>Vencimiento</th>
+                                    <th>Puntaje</th>
+                                    <th>Horas</th>
+                                    <th>Licencia</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($results as $item)
+                                <tr>
+                                    <td>{{ $item->legajo }}</td>
+                                    <td>{{ $item->nombre }}</td>
+                                    <td>{{ $item->dni }}</td>
+                                    <td>{{ $item->fecha_ingreso }}</td>
+                                    <td>{{ $item->dependencia }}</td>
+                                    <td>{{ $item->desempenio }}</td>
+                                    <td>{{ $item->cargo }}</td>
+                                    <td>{{ $item->escalafon }}</td>
+                                    <td>{{ $item->agrupamiento }}</td>
+                                    <td>{{ $item->subrogancia }}</td>
+                                    <td>{{ $item->caracter }}</td>
+                                    <td>{{ $item->dedicacion }}</td>
+                                    <td>{{ $item->alta_cargo }}</td>
+                                    <td>{{ $item->vencimiento_cargo }}</td>
+                                    <td>{{ $item->puntaje }}</td>
+                                    <td>{{ $item->hs }}</td>
+                                    <td>{{ $item->licencia }}</td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -70,17 +130,20 @@
                     <!-- Paginación -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="text-muted small">
-                            Mostrando registros
+                            Mostrando {{ $results->firstItem() }} a {{ $results->lastItem() }} de {{ $results->total() }} registros
                         </div>
                         <div>
-                           
+                            {{ $results->appends(['search' => $search ?? '', 'base' => $base ?? ''])->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
+                    @else
+                    <div class="alert alert-info">
+                        Seleccione una base de datos para comenzar
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
