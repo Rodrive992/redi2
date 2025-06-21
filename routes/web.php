@@ -6,6 +6,7 @@ use App\Http\Controllers\MesaController;
 use App\Http\Controllers\HerramientasController;
 use App\Http\Controllers\ConsultarBasesController;
 use App\Http\Controllers\CruceCompatibilidadController;
+use App\Http\Controllers\CertificadosController;
 
 // Rutas públicas
 Route::controller(AuthController::class)->group(function () {
@@ -29,7 +30,8 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
         Route::get('/mesa-entrada', [MesaController::class, 'mesaEntrada'])->name('herramientas.mesa_entrada');
         Route::get('/compatibilidad', [CruceCompatibilidadController::class, 'compatibilidad'])->name('herramientas.compatibilidad');
         Route::get('/exportar-compatibilidad', [CruceCompatibilidadController::class, 'exportarCompatibilidad'])->name('herramientas.exportar_compatibilidad');
-        Route::get('/certificados', [HerramientasController::class, 'certificados'])->name('herramientas.certificados');
+        Route::get('/certificados', [CertificadosController::class, 'certificados'])->name('herramientas.certificados');
+        Route::post('/exportar-certificados', [CertificadosController::class, 'exportarCertificados'])->name('herramientas.exportar_certificados');
         Route::get('/procedimientos', [HerramientasController::class, 'procedimientos'])->name('herramientas.procedimientos');
         Route::get('/asistencia', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
         Route::get('/vencimientos', [HerramientasController::class, 'vencimientos'])->name('herramientas.vencimientos');
