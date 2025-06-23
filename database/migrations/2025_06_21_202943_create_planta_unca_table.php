@@ -8,7 +8,7 @@ class CreatePlanta062025Table extends Migration
 {
     public function up()
     {
-        // Se crea la estructura de la tabla, por ejemplo: `planta_06_2025`
+       
         Schema::create('planta_06_2025', function (Blueprint $table) {
             $table->id('id_cargo');
             $table->string('legajo');
@@ -33,13 +33,13 @@ class CreatePlanta062025Table extends Migration
             $table->integer('puntaje');
             $table->date('alta_licencia')->nullable();
             $table->date('baja_licencia')->nullable();
-            $table->timestamps(0); // No necesitamos timestamps si no se utilizan
+            $table->timestamps(0); 
         });
     }
 
     public function down()
     {
-        // En el down, eliminamos la tabla creada
+        
         Schema::dropIfExists('planta_06_2025');
     }
 }
