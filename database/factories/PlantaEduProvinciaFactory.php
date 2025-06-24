@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PlantaEduProvinciaFactory extends Factory
 {
+    use HasFactory;
     // Definir el modelo asociado
     protected $model = PlantaEduProvincia::class;
 
