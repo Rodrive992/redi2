@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 use Carbon\Carbon;
 
 class PlantaUnca extends Model
 {
+    
     // Definir el nombre de la tabla dinámicamente en el constructor del modelo
     protected $table;
 

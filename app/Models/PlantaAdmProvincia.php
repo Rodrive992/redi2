@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class PlantaAdmProvincia extends Model
 {
+ 
    // Definir el nombre de la tabla
     protected $table = 'planta_administracion_provincia';  // Cambia el nombre de la tabla si es necesario
     

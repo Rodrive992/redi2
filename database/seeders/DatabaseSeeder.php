@@ -12,9 +12,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UsersTableSeeder::class,
             MesaSeeder::class,
-            PlantaUncaSeeder::class,
-            PlantaEduProvinciaSeeder::class,
-            PlantaAdmProvinciaSeeder::class,
+            
         ]);
     }
 }
