@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Mesa extends Model
 {
+    use HasFactory;
+
     protected $table = 'mesa';
     
     protected $fillable = [
@@ -15,15 +18,13 @@ class Mesa extends Model
         'dependencia',
         'entregado_a',
         'estado',
-        'fecha'  // Solo las columnas que realmente existen
+        'fecha'
     ];
     
-    // Solo incluir 'fecha' si necesitas que se maneje como objeto Carbon
     protected $dates = [
-        'fecha'  // Eliminados created_at y updated_at que no existen
+        'fecha'
     ];
     
-    // Desactivar timestamps automáticos
     public $timestamps = false;
     
     public function scopePendientesDe($query, $usuario)

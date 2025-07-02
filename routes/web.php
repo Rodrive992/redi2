@@ -8,6 +8,8 @@ use App\Http\Controllers\HerramientasExternoController;
 use App\Http\Controllers\ConsultarBasesController;
 use App\Http\Controllers\CruceCompatibilidadController;
 use App\Http\Controllers\CertificadosController;
+use App\Http\Controllers\CargarBaseUncaController;
+use App\Http\Controllers\CargarBaseRelojesController;
 
 // Rutas públicas
 Route::controller(AuthController::class)->group(function () {
@@ -63,3 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/mesa/recibir/{id}', [MesaController::class, 'recibir'])->name('mesa.recibir');
     Route::post('/mesa/reenviar/{id}', [MesaController::class, 'reenviar'])->name('mesa.reenviar');
 });
+Route::post('/cargar-bases/unca', [CargarBaseUncaController::class, 'cargar'])->name('cargar.base.unca');
+Route::post('/cargar-bases/administracion', [CargarBaseAdmProvController::class, 'cargar'])->name('cargar.base.administracion');
+Route::post('/cargar-bases/educacion', [CargarBaseEduProvController::class, 'cargar'])->name('cargar.base.educacion');
+Route::post('/cargar-bases/relojes', [CargarBaseRelojesController::class, 'cargar'])->name('cargar.base.relojes');
