@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\HerramientasController;
+use App\Http\Controllers\HerramientasExternoController;
 use App\Http\Controllers\ConsultarBasesController;
 use App\Http\Controllers\CruceCompatibilidadController;
 use App\Http\Controllers\CertificadosController;
@@ -41,7 +42,12 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
         Route::get('/carga-bases', [HerramientasController::class, 'cargaBases'])->name('herramientas.carga_bases');
         Route::get('/suma-horarios', [HerramientasController::class, 'sumaHorarios'])->name('herramientas.suma_horarios');
     });
-
+    // Herramientas
+    Route::prefix('herramientas_externo')->group(function () {       
+        Route::get('redi-externo/asistencia', [HerramientasExternoController::class, 'asistencia'])->name('herramientas.asistencia_externo');       
+        Route::get('redi-externo/real-prestacion', [HerramientasExternoController::class, 'realPrestacion'])->name('herramientas.real_prestacion_externo');
+        
+    });
     // Mesa de Entrada
     Route::prefix('mesa')->group(function () {
         Route::post('/registrar', [MesaController::class, 'registrar'])->name('mesa.registrar');

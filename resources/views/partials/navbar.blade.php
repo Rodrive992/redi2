@@ -14,8 +14,10 @@
         </div>
 
         <div class="d-flex align-items-center">
-            <!-- Componente de notificaciones -->
-            <x-notifications.badge />
+            <!-- Condicionar el componente de notificaciones solo si la dependencia es 'dgp' -->
+            @if(auth()->user()->dependencia === 'dgp')
+                <x-notifications.badge />
+            @endif
             
             <!-- Botón de logout directo (sin dropdown) -->
             <form method="POST" action="{{ route('logout') }}" class="ms-3">
