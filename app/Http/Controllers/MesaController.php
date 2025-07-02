@@ -75,6 +75,7 @@ class MesaController extends Controller
         $query->where(function($q) use ($search) {
             // Convertimos todo a minúsculas para la comparación sin distinción de mayúsculas/minúsculas
             $q->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($search) . '%'])
+              ->orWhereRaw('LOWER(id) LIKE ?', ['%' . strtolower($search) . '%'])
               ->orWhereRaw('LOWER(entrada) LIKE ?', ['%' . strtolower($search) . '%'])
               ->orWhereRaw('LOWER(dependencia) LIKE ?', ['%' . strtolower($search) . '%'])
               ->orWhereRaw('LOWER(entregado_a) LIKE ?', ['%' . strtolower($search) . '%'])
