@@ -76,7 +76,7 @@
                                         </div>
                                         <h5 class="card-title">Real Prestación</h5>
                                         <p class="card-text">Enviados de real prestación de servicios</p>
-                                        <a href="{{ route('herramientas.real_prestacion') }}" class="btn btn-warning stretched-link">Acceder</a>
+                                        <a href="{{ route('herramientas.real_prestacion_historial') }}" class="btn btn-warning stretched-link">Acceder</a>
                                     </div>
                                 </div>
                             </div>

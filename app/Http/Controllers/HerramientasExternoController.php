@@ -21,6 +21,12 @@ class HerramientasExternoController extends Controller
             'title' => 'Real Prestación'
         ]);
     }
+     public function realPrestacionHistorialExterno()
+    {
+        return view('herramientas.real_prestacion_historial_externo', [
+            'title' => 'Real Prestación Historial'
+        ]);
+    }
 
    
 }

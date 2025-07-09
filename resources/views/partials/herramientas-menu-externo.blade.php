@@ -8,9 +8,11 @@
             //'compatibilidad' => ['icon' => 'bi-people-fill', 'text' => 'Compatibilidad'],
             //'certificados' => ['icon' => 'bi-file-earmark-text', 'text' => 'Certificados'],
             //'procedimientos' => ['icon' => 'bi-journal-text', 'text' => 'Procedimientos'],
-            'asistencia' => ['icon' => 'bi-calendar-check', 'text' => 'Asistencia'],
+            'real_prestacion_externo' => ['icon' => 'bi-upload', 'text' => 'Cargar Real Prestación'],
+            'real_prestacion_historial_externo' => ['icon' => 'bi-journal-text', 'text' => 'Historial Real Prestacion'],
+            'asistencia_externo' => ['icon' => 'bi-calendar-check', 'text' => 'Asistencia'],
             //'vencimientos' => ['icon' => 'bi-clock-history', 'text' => 'Vencimientos'],
-            'real_prestacion' => ['icon' => 'bi-graph-up', 'text' => 'Real Prestación'],
+            
             //'consultar_bases' => ['icon' => 'bi-clipboard-check', 'text' => 'Consultar Bases'],
             //'carga_bases' => ['icon' => 'bi-database', 'text' => 'Carga de Bases'],
             //'suma_horarios' => ['icon' => 'bi-calculator', 'text' => 'Suma Horarios']

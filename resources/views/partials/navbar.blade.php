@@ -18,6 +18,11 @@
             @if(auth()->user()->dependencia === 'dgp')
                 <x-notifications.badge />
             @endif
+
+            <!-- Añadimos el nuevo condicional para autorizadores -->
+            @if(auth()->user()->permiso === 'autorizar')
+                <x-notifications.real-prestacion-badge />
+            @endif
             
             <!-- Botón de logout directo (sin dropdown) -->
             <form method="POST" action="{{ route('logout') }}" class="ms-3">

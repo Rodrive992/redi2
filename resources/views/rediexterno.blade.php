@@ -47,7 +47,7 @@
                                         </div>
                                         <h5 class="card-title">Asistencia</h5>
                                         <p class="card-text">Control de asistencia</p>
-                                        <a href="{{ route('herramientas.asistencia') }}" class="btn btn-danger stretched-link">Acceder</a>
+                                        <a href="{{ route('herramientas.asistencia_externo') }}" class="btn btn-danger stretched-link">Acceder</a>
                                     </div>
                                 </div>
                             </div>

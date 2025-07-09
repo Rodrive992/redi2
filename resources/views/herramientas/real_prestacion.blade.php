@@ -11,9 +11,9 @@
                     <div class="card-header bg-white">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="card-title text-primary mb-0">
-                                <i class="bi bi-journal-text me-2"></i> Real Prestación - UNCA
+                                <i class="bi bi-journal-text me-2"></i> Real Prestación DGP - UNCA
                             </h3>
-                            @include('partials.herramientas-menu-externo')
+                            @include('partials.herramientas-real-prestacion-menu')
                         </div>
                     </div>
                     <div class="card-body">

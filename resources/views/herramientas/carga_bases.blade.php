@@ -124,6 +124,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Ajustar tipo de archivo según la base seleccionada
+    baseSelect.addEventListener('change', () => {
+        const base = baseSelect.value;
+
+        if (base === 'educacion' || base === 'administracion') {
+            fileInput.setAttribute('accept', '.zip');
+        } else if (base === 'unca' || base === 'relojes') {
+            fileInput.setAttribute('accept', '.csv');
+        } else {
+            fileInput.removeAttribute('accept');
+        }
+    });
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 

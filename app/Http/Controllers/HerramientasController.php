@@ -69,9 +69,9 @@ class HerramientasController extends Controller
     /**
      * Muestra la herramienta Real Prestación
      */
-    public function realPrestacion()
+    public function realPrestacionHistorial()
     {
-        return view('herramientas.real_prestacion', [
+        return view('herramientas.real_prestacion_historial', [
             'title' => 'Real Prestación'
         ]);
     }
