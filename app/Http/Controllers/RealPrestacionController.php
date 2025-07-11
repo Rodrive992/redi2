@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-class RealprestacionController extends Controller
+class RealPrestacionController extends Controller
 {
     // Función para mostrar el formulario principal
     public function index()

@@ -46,8 +46,7 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
             Route::get('/asistencia', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
             Route::get('/vencimientos', [HerramientasController::class, 'vencimientos'])->name('herramientas.vencimientos');       
             Route::get('/real-prestacion-historial', [HerramientasController::class, 'realPrestacionHistorial'])->name('herramientas.real_prestacion_historial');
-            Route::get('/real-prestacion-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');
-            Route::get('/real-prestacion-historial', [RealPrestacionHistorialController::class, 'index_dgp'])->name('herramientas.real_prestacion_historial');
+            Route::get('/real-prestacion-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');            
             Route::get('/real-prestacion', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
             Route::get('/consultar-bases', [ConsultarBasesController::class, 'index'])->name('herramientas.consultar_bases');
             Route::get('/exportar-bases', [ConsultarBasesController::class, 'exportar'])->name('herramientas.exportar_bases');
