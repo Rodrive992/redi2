@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ArchivosRealPrestacion;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class HerramientasController extends Controller
 {
@@ -69,11 +72,27 @@ class HerramientasController extends Controller
     /**
      * Muestra la herramienta Real Prestación
      */
-    public function realPrestacionHistorial()
+        public function realPrestacionHistorial()
     {
-        return view('herramientas.real_prestacion_historial', [
-            'title' => 'Real Prestación'
-        ]);
+        $user = Auth::user();
+
+        if ($user->dependencia == 'dgp') {
+            $dependencia = 'secf';
+        } else {
+            $dependencia = $user->dependencia;
+        }
+
+        $query = ArchivosRealPrestacion::where('dependencia', $dependencia);
+
+        if ($user->desempenio) {
+            $query->where('desempenio', $user->desempenio);
+        } else {
+            $query->whereNull('desempenio');
+        }
+
+        $archivos = $query->orderBy('fecha_subida', 'desc')->get();
+
+        return view('herramientas.real_prestacion_historial', compact('archivos'));
     }
 
     /**
@@ -105,4 +124,5 @@ class HerramientasController extends Controller
             'title' => 'Suma Horarios'
         ]);
     }
+
 }

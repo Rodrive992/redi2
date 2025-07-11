@@ -35,25 +35,25 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
         return view('rediexterno');
     })->name('redi.externo');
 
-    // Herramientas
-    Route::prefix('herramientas')->group(function () {
-        Route::get('/mesa-entrada', [MesaController::class, 'mesaEntrada'])->name('herramientas.mesa_entrada');
-        Route::get('/compatibilidad', [CruceCompatibilidadController::class, 'compatibilidad'])->name('herramientas.compatibilidad');
-        Route::get('/exportar-compatibilidad', [CruceCompatibilidadController::class, 'exportarCompatibilidad'])->name('herramientas.exportar_compatibilidad');
-        Route::get('/certificados', [CertificadosController::class, 'certificados'])->name('herramientas.certificados');
-        Route::post('/exportar-certificados', [CertificadosController::class, 'exportarCertificados'])->name('herramientas.exportar_certificados');
-        Route::get('/procedimientos', [HerramientasController::class, 'procedimientos'])->name('herramientas.procedimientos');
-        Route::get('/asistencia', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
-        Route::get('/vencimientos', [HerramientasController::class, 'vencimientos'])->name('herramientas.vencimientos');       
-        Route::get('/real-prestacion-historial', [HerramientasController::class, 'realPrestacionHistorial'])->name('herramientas.real_prestacion_historial');
-         Route::get('/real-prestacion-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');
-        Route::get('/real-prestacion-historial', [RealPrestacionHistorialController::class, 'index_dgp'])->name('herramientas.real_prestacion_historial');
-        Route::get('/real-prestacion', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
-        Route::get('/consultar-bases', [ConsultarBasesController::class, 'index'])->name('herramientas.consultar_bases');
-        Route::get('/exportar-bases', [ConsultarBasesController::class, 'exportar'])->name('herramientas.exportar_bases');
-        Route::get('/carga-bases', [HerramientasController::class, 'cargaBases'])->name('herramientas.carga_bases');
-        Route::get('/suma-horarios', [HerramientasController::class, 'sumaHorarios'])->name('herramientas.suma_horarios');
-    });
+        // Herramientas
+        Route::prefix('herramientas')->group(function () {
+            Route::get('/mesa-entrada', [MesaController::class, 'mesaEntrada'])->name('herramientas.mesa_entrada');
+            Route::get('/compatibilidad', [CruceCompatibilidadController::class, 'compatibilidad'])->name('herramientas.compatibilidad');
+            Route::get('/exportar-compatibilidad', [CruceCompatibilidadController::class, 'exportarCompatibilidad'])->name('herramientas.exportar_compatibilidad');
+            Route::get('/certificados', [CertificadosController::class, 'certificados'])->name('herramientas.certificados');
+            Route::post('/exportar-certificados', [CertificadosController::class, 'exportarCertificados'])->name('herramientas.exportar_certificados');
+            Route::get('/procedimientos', [HerramientasController::class, 'procedimientos'])->name('herramientas.procedimientos');
+            Route::get('/asistencia', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
+            Route::get('/vencimientos', [HerramientasController::class, 'vencimientos'])->name('herramientas.vencimientos');       
+            Route::get('/real-prestacion-historial', [HerramientasController::class, 'realPrestacionHistorial'])->name('herramientas.real_prestacion_historial');
+            Route::get('/real-prestacion-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');
+            Route::get('/real-prestacion-historial', [RealPrestacionHistorialController::class, 'index_dgp'])->name('herramientas.real_prestacion_historial');
+            Route::get('/real-prestacion', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
+            Route::get('/consultar-bases', [ConsultarBasesController::class, 'index'])->name('herramientas.consultar_bases');
+            Route::get('/exportar-bases', [ConsultarBasesController::class, 'exportar'])->name('herramientas.exportar_bases');
+            Route::get('/carga-bases', [HerramientasController::class, 'cargaBases'])->name('herramientas.carga_bases');
+            Route::get('/suma-horarios', [HerramientasController::class, 'sumaHorarios'])->name('herramientas.suma_horarios');
+        });
     // Herramientas-Externo
         Route::prefix('herramientas_externo')->group(function () {
         Route::get('redi-externo/asistencia_externo', [HerramientasExternoController::class, 'asistenciaExterno'])->name('herramientas.asistencia_externo');
