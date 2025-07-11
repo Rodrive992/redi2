@@ -58,8 +58,7 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
         Route::get('redi-externo/asistencia_externo', [HerramientasExternoController::class, 'asistenciaExterno'])->name('herramientas.asistencia_externo');
         Route::get('redi-externo/real-prestacion', [HerramientasExternoController::class, 'realPrestacion'])->name('herramientas.real_prestacion_externo');
         Route::get('real_prestacion_historial_externo', [RealPrestacionHistorialController::class, 'index_externo'])->name('herramientas.real_prestacion_historial_externo');
-        Route::get('real_prestacion_externo', [RealPrestacionController::class, 'index'])->name('herramientas.real_prestacion_externo');
-        Route::get('real_prestacion_externo/descargar-plantilla', [RealprestacionController::class, 'descargarPlantilla'])->name('real_prestacion_externo.descargar_plantilla');
+        Route::get('real_prestacion_externo/descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion_externo.descargar_plantilla');
         Route::post('real_prestacion_externo/subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion_externo.subir_archivo');
         Route::delete('real_prestacion/borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');        
         Route::post('real_prestacion/autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');

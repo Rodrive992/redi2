@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\Storage;
 
 class RealPrestacionController extends Controller
 {
-    // Función para mostrar el formulario principal
-    public function index()
-    {
-        return view('herramientas.real_prestacion_externo');
-    }
 
     // Función para descargar la plantilla
     public function descargarPlantilla()

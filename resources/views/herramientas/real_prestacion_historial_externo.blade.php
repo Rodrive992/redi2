@@ -13,7 +13,7 @@
                             <h3 class="card-title text-primary mb-0">
                                 <i class="bi bi-clock-history me-2"></i> Historial Real Prestación - UNCA
                             </h3>
-                            @include('partials.herramientas-real-prestacion-menu')
+                            @include('partials.herramientas-menu-externo')
                         </div>
                     </div>
                     <div class="card-body">

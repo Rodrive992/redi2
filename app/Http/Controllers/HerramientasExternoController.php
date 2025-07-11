@@ -15,7 +15,7 @@ class HerramientasExternoController extends Controller
     }
 
     
-    public function realPrestacionExterno()
+    public function realPrestacion()
     {
         return view('herramientas.real_prestacion_externo', [
             'title' => 'Real Prestación'
