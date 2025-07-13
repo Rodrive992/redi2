@@ -71,7 +71,7 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
 
 
         Route::prefix('asistencia')->group(function () {
-            Route::get('/informe    ', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
+            Route::get('/informe', [HerramientasController::class, 'asistencia'])->name('herramientas.asistencia');
             Route::get('/panel_control', [HerramientasAsistenciaController::class, 'panelControl'])->name('herramientas.panel_control');
             Route::get('/calcular_horas', [HerramientasAsistenciaController::class, 'calcularHoras'])->name('herramientas.calcular_horas');
             Route::post('/guardar_control', [HerramientasAsistenciaController::class, 'guardarControl'])->name('herramientas_asistencia.guardar_control');
