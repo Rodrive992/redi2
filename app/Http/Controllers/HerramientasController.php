@@ -69,6 +69,13 @@ class HerramientasController extends Controller
         ]);
     }
 
+    public function realPrestacion()
+    {
+        return view('herramientas.real_prestacion', [
+            'title' => 'Vencimientos'
+        ]);
+    }
+
     /**
      * Muestra la herramienta Real Prestación
      */

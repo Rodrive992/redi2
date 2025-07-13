@@ -13,6 +13,12 @@ class HerramientasExternoController extends Controller
             'title' => 'Asistencia'
         ]);
     }
+     public function asistenciaExternoUai()
+    {
+        return view('herramientas.asistencia_externo_uai', [
+            'title' => 'Asistencia Uai'
+        ]);
+    }
 
     
     public function realPrestacion()

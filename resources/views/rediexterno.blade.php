@@ -61,7 +61,7 @@
                                         </div>
                                         <h5 class="card-title">Planta del Personal</h5>
                                         <p class="card-text">Planta de la dependencia</p>
-                                        <a href="" class="btn btn-primary stretched-link">Acceder</a>
+                                        <a href="{{ route('herramientas.consultar_bases_externo') }}" class="btn btn-primary stretched-link">Acceder</a>
                                     </div>
                                 </div>
                             </div>

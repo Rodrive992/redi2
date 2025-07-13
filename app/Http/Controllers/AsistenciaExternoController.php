@@ -2,59 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AsignacionControlAsistencia;
 use App\Models\AsignacionLegajos;
 use App\Models\AsignacionRelojes;
 use App\Models\AsistenciaReloj;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class AsistenciaDgpController extends Controller
+class AsistenciaExternoController extends Controller
 {
-    public function index()
-    {
-        return view('herramientas.asistencia');
-    }
-
     public function consultarInforme(Request $request)
     {
         $request->validate([
-            'dependencia' => 'required',
-            'desempenio' => 'nullable',
             'desde' => 'required|date',
             'hasta' => 'required|date',
             'nombre_legajo' => 'nullable|string'
         ]);
+        
+        // Obtengo el usuario autenticado
+        $user = Auth::user();
 
-        $datos = $this->procesarAsistencia($request);
+        // Buscamos en asignacion_control_asistencia
+        $asignacion = AsignacionControlAsistencia::where('cuil_usuario', $user->cuil)->first();
 
-        return view('herramientas.asistencia', [
-            'desde' => $request->desde,
-            'hasta' => $request->hasta,
-            'dependencia' => $request->dependencia,
-            'desempenio' => $request->desempenio,
-            'nombre_legajo' => $request->nombre_legajo,
-            'fechas' => $datos['fechas'],
-            'asistencia' => $datos['asistencia'],
-            'nombres' => $datos['nombres']
-        ]);
-    }
-    public function consultarInformeUai(Request $request)
-    {
-        $request->validate([
-            'dependencia' => 'required',
-            'desempenio' => 'nullable',
-            'desde' => 'required|date',
-            'hasta' => 'required|date',
-            'nombre_legajo' => 'nullable|string'
+        // Validación si no existe asignación
+        if (!$asignacion) {
+            return redirect()->back()->with('error', 'No tiene asignación de control de asistencia.');
+        }
+
+        $dependencia = $asignacion->dependencia_usuario ?? null;
+        $desempenio = $asignacion->desempenio_usuario ?? null;
+
+        // Pasamos estos valores al request para que lo use procesarAsistencia
+        $request->merge([
+            'dependencia' => $dependencia,
+            'desempenio' => $desempenio
         ]);
 
         $datos = $this->procesarAsistencia($request);
 
-        return view('herramientas.asistencia_externo_uai', [
+        return view('herramientas.asistencia_externo', [
             'desde' => $request->desde,
             'hasta' => $request->hasta,
-            'dependencia' => $request->dependencia,
-            'desempenio' => $request->desempenio,
+            'dependencia' => $dependencia,
+            'desempenio' => $desempenio,
             'nombre_legajo' => $request->nombre_legajo,
             'fechas' => $datos['fechas'],
             'asistencia' => $datos['asistencia'],
@@ -141,7 +133,6 @@ class AsistenciaDgpController extends Controller
             $fechas[] = $fecha->format('Y-m-d');
         }
 
-        // Inicializamos la estructura vacía para todos los legajos y días
         $asistencia = [];
         foreach ($legajosFiltrados as $legajo) {
             foreach ($fechas as $fecha) {
@@ -149,16 +140,13 @@ class AsistenciaDgpController extends Controller
             }
         }
 
-        // Procesamos los registros
         foreach ($registros as $r) {
             $legajo = $r->legajo;
             $fecha = $r->fecha;
             $hora = substr($r->registro, 0, 5);
-
             $asistencia[$legajo][$fecha][] = $hora;
         }
 
-        // Filtro de 40 minutos
         foreach ($asistencia as $legajo => $dias) {
             foreach ($dias as $fecha => $horas) {
                 $horas = array_unique($horas);
@@ -168,18 +156,15 @@ class AsistenciaDgpController extends Controller
                 $ultimoMinutos = null;
 
                 foreach ($horas as $hora) {
-                    list($h, $m) = explode(':', $hora);
+                    [$h, $m] = explode(':', $hora);
                     $minutosActual = $h * 60 + $m;
 
                     if (is_null($ultimoMinutos)) {
                         $filtrados[] = $hora;
                         $ultimoMinutos = $minutosActual;
-                    } else {
-                        $diff = $minutosActual - $ultimoMinutos;
-                        if ($diff >= 40) {
-                            $filtrados[] = $hora;
-                            $ultimoMinutos = $minutosActual;
-                        }
+                    } elseif (($minutosActual - $ultimoMinutos) >= 40) {
+                        $filtrados[] = $hora;
+                        $ultimoMinutos = $minutosActual;
                     }
                 }
 
@@ -187,7 +172,6 @@ class AsistenciaDgpController extends Controller
             }
         }
 
-        // Ordenar por nombre
         uksort($asistencia, function ($a, $b) use ($nombres) {
             return strcmp($nombres[$a] ?? '', $nombres[$b] ?? '');
         });

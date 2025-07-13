@@ -7,7 +7,7 @@
             'real_prestacion' => ['icon' => 'bi-upload', 'text' => 'Cargar Real Prestación'],
             'real_prestacion_historial' => ['icon' => 'bi-journal-text', 'text' => 'Historial Real Prestacion'],
             'real_prestacion_control' => ['icon' => 'bi bi-pencil', 'text' => 'Control de Real Prestación'],
-           
+            
         ] as $route => $options)
             <li>
                 <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route("herramientas.$route") }}">
