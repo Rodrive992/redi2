@@ -66,7 +66,11 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
          Route::prefix('real-prestacion')->group(function () {            
             Route::get('/historial', [HerramientasController::class, 'realPrestacionHistorial'])->name('herramientas.real_prestacion_historial');
             Route::get('/panel-de-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');
-            Route::get('/carga', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');            
+            Route::get('/carga', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
+            Route::get('descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion.descargar_plantilla');
+            Route::post('subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion.subir_archivo');
+            Route::delete('borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');
+            Route::post('autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');            
         });
 
 

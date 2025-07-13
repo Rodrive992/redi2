@@ -32,7 +32,7 @@
                         <!-- Botón para descargar plantilla -->
                         <div class="row mb-4">
                             <div class="col-md-12 text-center">
-                                <a href="{{ route('real_prestacion_externo.descargar_plantilla') }}" class="btn btn-primary">
+                                <a href="{{ route('real_prestacion.descargar_plantilla') }}" class="btn btn-primary">
                                     <i class="bi bi-download me-2"></i> Descargar Plantilla
                                 </a>
                             </div>
@@ -48,7 +48,7 @@
                                         </h5>
                                     </div>
                                     <div class="card-body">
-                                        <form action="{{ route('real_prestacion_externo.subir_archivo') }}" method="POST" enctype="multipart/form-data" id="form-real-prestacion">
+                                        <form action="{{ route('real_prestacion.subir_archivo') }}" method="POST" enctype="multipart/form-data" id="form-real-prestacion">
                                             @csrf
                                             
                                             <div class="row mb-3">

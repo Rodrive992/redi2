@@ -23,6 +23,7 @@ class RealPrestacionController extends Controller
         $user = Auth::user();
         $dependencia = $user->dependencia;
         $desempenio = $user->desempenio;
+        
 
         // Obtener el nombre completo de la dependencia
         $dependenciaCompleta = $this->getDependenciaCompleta($dependencia, $desempenio);
@@ -102,6 +103,10 @@ class RealPrestacionController extends Controller
 
     private function getDependenciaCompleta($dependencia, $desempenio)
     {
+
+        if ($dependencia === 'dgp') {
+        $dependencia = 'secf';
+        }
         $dependencias = [
             'fexa' => 'Facultad de Ciencias Exactas y Naturales',
             'fhum' => 'Facultad de Humanidades',
@@ -207,6 +212,11 @@ class RealPrestacionController extends Controller
 
     private function obtenerDatosPlanta($dependencia, $desempenio)
     {
+
+            // Si la dependencia es 'dgo', reemplazar por 'secf'
+        if ($dependencia === 'dgp') {
+            $dependencia = 'secf';
+        }
         $planta = new PlantaUnca();
 
         $query = $planta->newQuery();
