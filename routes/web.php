@@ -119,9 +119,7 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
     Route::prefix('redi-externo')->middleware('UsuarioExterno')->group(function () {
         Route::prefix('herramientas')->group(function () {
             Route::get('/asistencia', [HerramientasExternoController::class, 'asistenciaExterno'])->name('herramientas.asistencia_externo');
-            Route::get('/asistencia-uai', [HerramientasExternoController::class, 'asistenciaExternoUai'])->name('herramientas.asistencia_externo_uai');
-            Route::get('/real-prestacion/carga', [HerramientasExternoController::class, 'realPrestacion'])->name('herramientas.real_prestacion_externo');
-            Route::get('/real-prestacion/historial', [RealPrestacionHistorialController::class, 'index_externo'])->name('herramientas.real_prestacion_historial_externo');
+            Route::get('/asistencia-uai', [HerramientasExternoController::class, 'asistenciaExternoUai'])->name('herramientas.asistencia_externo_uai');            
             Route::get('/consultar-bases', [ConsultarBasesExternoController::class, 'index'])->name('herramientas.consultar_bases_externo');
         });
         Route::prefix('real-prestacion')->group(function () {            
