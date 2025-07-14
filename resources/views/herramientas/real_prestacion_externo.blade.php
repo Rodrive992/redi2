@@ -74,7 +74,7 @@
                                                     <label for="ano" class="form-label">Año</label>
                                                     <select class="form-select" id="ano" name="ano" required>
                                                         <option value="" selected disabled>Seleccionar año</option>
-                                                        @for($i = date('Y'); $i >= date('Y') - 5; $i--)
+                                                        @for($i = date('Y'); $i >= date('Y') -1; $i--)
                                                             <option value="{{ $i }}">{{ $i }}</option>
                                                         @endfor
                                                     </select>

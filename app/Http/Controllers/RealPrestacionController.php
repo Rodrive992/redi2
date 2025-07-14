@@ -20,7 +20,7 @@ class RealPrestacionController extends Controller
     // Función para descargar la plantilla
     public function descargarPlantilla()
     {
-        $user = Auth::user();
+        $user = Auth::user();        
         $dependencia = $user->dependencia;
         $desempenio = $user->desempenio;
         
@@ -64,6 +64,7 @@ class RealPrestacionController extends Controller
     // Función para subir el archivo
     public function subirArchivo(Request $request)
     {
+        
         $request->validate([
             'mes' => 'required|string|size:2',
             'ano' => 'required|integer|digits:4',
@@ -72,10 +73,16 @@ class RealPrestacionController extends Controller
 
         try {
             $user = Auth::user();
+            $dependencia = $user->dependencia;
+            // Si la dependencia es 'dgo', usar 'secf'
+             if ($dependencia === 'dgp') {
+            $dependencia = 'secf';
+            }
+            
             $file = $request->file('archivo_real_prestacion');
 
             // Generar nombre único para el archivo
-            $fileName = 'real_prestacion_' . $user->dependencia . '_' . $request->mes . '_' . $request->ano . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'real_prestacion_' . $dependencia . '_' . $request->mes . '_' . $request->ano . '_' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('real_prestaciones', $fileName, 'public');
 
             // Guardar en la base de datos
@@ -85,11 +92,12 @@ class RealPrestacionController extends Controller
             $archivo->tipo_archivo = $file->getClientOriginalExtension();
             $archivo->tamano_archivo = $file->getSize();
             $archivo->fecha_subida = now();
-            $archivo->dependencia = $user->dependencia;
+            $archivo->dependencia = $dependencia;
+            $archivo->desempenio = $user->desempenio;
             $archivo->mes = $request->mes;
             $archivo->ano = $request->ano;
             $archivo->usuario_envio = $user->name   ;
-            $archivo->estado = 'pendiente';
+            $archivo->estado = 'Pendiente';
             $archivo->save();
 
             return back()->with('success', 'El archivo se ha subido correctamente y está pendiente de aprobación.');

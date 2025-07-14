@@ -11,7 +11,7 @@ $rutaHistorial = ($user->dependencia === 'dgp')
         : route('herramientas.real_prestacion_historial_externo');
 
 $count = DB::table('archivos_real_prestacion')
-    ->where('estado', 'pendiente')
+    ->where('estado', 'Pendiente')
     ->when($user->dependencia !== 'admin', function ($query) use ($dependenciaReal) {
         return $query->where('dependencia', $dependenciaReal);
     })

@@ -13,19 +13,25 @@ class RealPrestacionHistorialController extends Controller
     public function index_externo()
     {
         $user = Auth::user();
-        
-        // Obtener archivos según dependencia y desempeño del usuario
-        $query = ArchivosRealPrestacion::where('dependencia', $user->dependencia);
-        
-        if ($user->desempenio) {
-            $query->where('desempenio', $user->desempenio);
+
+        $query = ArchivosRealPrestacion::query();
+
+        if ($user->dependencia === 'sgrl' && $user->permiso === 'autorizar') {
+            // Usuario sgrl con permiso autorizar: traer todos los de sgrl sin filtrar desempeño
+            $query->where('dependencia', 'sgrl');
         } else {
-            $query->whereNull('desempenio');
+            // Comportamiento normal: filtrar por dependencia y desempeño/null
+            $query->where('dependencia', $user->dependencia);
+
+            if ($user->desempenio) {
+                $query->where('desempenio', $user->desempenio);
+            } else {
+                $query->whereNull('desempenio');
+            }
         }
-        
-        // Ordenar por fecha_subida en lugar de created_at
+
         $archivos = $query->orderBy('fecha_subida', 'desc')->get();
-        
+
         return view('herramientas.real_prestacion_historial_externo', compact('archivos'));
     }
     public function index_dgp()

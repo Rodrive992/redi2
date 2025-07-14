@@ -8,7 +8,7 @@
     </div>
     <div class="offcanvas-body">
         @php
-        $pendientes = App\Models\ArchivosRealPrestacion::where('estado', 'pendiente')
+        $pendientes = App\Models\ArchivosRealPrestacion::where('estado', 'Pendiente')
             ->when(auth()->user()->dependencia !== 'admin', function($query) {
                 return $query->where('dependencia', auth()->user()->dependencia);
             })

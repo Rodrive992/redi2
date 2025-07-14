@@ -67,10 +67,10 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
             Route::get('/historial', [HerramientasController::class, 'realPrestacionHistorial'])->name('herramientas.real_prestacion_historial');
             Route::get('/panel-de-control', [RealPrestacionControlController::class, 'index'])->name('herramientas.real_prestacion_control');
             Route::get('/carga', [HerramientasController::class, 'realPrestacion'])->name('herramientas.real_prestacion');
-            Route::get('descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion.descargar_plantilla');
-            Route::post('subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion.subir_archivo');
-            Route::delete('borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');
-            Route::post('autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');            
+            Route::get('/descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion.descargar_plantilla');
+            Route::post('/subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion.subir_archivo');
+            Route::delete('/borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');
+            Route::post('/autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');            
         });
 
 
@@ -124,16 +124,17 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
             Route::get('/real-prestacion/historial', [RealPrestacionHistorialController::class, 'index_externo'])->name('herramientas.real_prestacion_historial_externo');
             Route::get('/consultar-bases', [ConsultarBasesExternoController::class, 'index'])->name('herramientas.consultar_bases_externo');
         });
-
-       
-        Route::get('/real_prestacion_externo/descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion_externo.descargar_plantilla');
-        Route::post('/real_prestacion_externo/subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion_externo.subir_archivo');
-        Route::delete('/real_prestacion/borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');
-        Route::post('/real_prestacion/autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');
-
+        Route::prefix('real-prestacion')->group(function () {            
+            Route::get('/carga', [HerramientasExternoController::class, 'realPrestacion'])->name('herramientas.real_prestacion_externo');
+            Route::get('/historial', [RealPrestacionHistorialController::class, 'index_externo'])->name('herramientas.real_prestacion_historial_externo');
+            Route::get('/descargar-plantilla', [RealPrestacionController::class, 'descargarPlantilla'])->name('real_prestacion_externo.descargar_plantilla');
+            Route::post('/subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion_externo.subir_archivo');
+            Route::delete('/borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion_externo.borrar');
+            Route::post('/autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion_externo.autorizar');
+            
+        });             
         Route::post('/asistencia-externo/consultar', [AsistenciaExternoController::class, 'consultarInforme'])->name('asistencia_externo.consultar');
         Route::post('/asistencia-externo/exportar', [ExportarAsistenciaExternoController::class, 'exportar'])->name('asistencia_externo.exportar');
-
         Route::post('/asistencia-externo-uai/consultar', [AsistenciaDgpController::class, 'consultarInformeUai'])->name('asistencia_externo_uai.consultar');
         Route::post('/asistencia-externo-uai/exportar', [ExportarAsistenciaExternoController::class, 'exportar'])->name('asistencia_externo_uai.exportar');
     });

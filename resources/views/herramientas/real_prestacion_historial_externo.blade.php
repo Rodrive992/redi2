@@ -66,15 +66,15 @@
                                             </td>
                                             <td>
                                                 <span class="badge 
-                                                    @if($archivo->estado == 'pendiente') bg-warning text-dark
+                                                    @if($archivo->estado == 'Pendiente') bg-warning text-dark
                                                     @elseif($archivo->estado == 'Autorizado') bg-success                                                    
                                                     @endif">
                                                     {{ ucfirst($archivo->estado) }}
                                                 </span>
                                             </td>
                                             <td>
-                                                @if(auth()->user()->permiso == 'editar' && $archivo->estado == 'pendiente')
-                                                    <form method="POST" action="{{ route('real_prestacion.borrar', $archivo->id) }}" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas borrar este archivo?');">
+                                                @if(auth()->user()->permiso == 'editar' && $archivo->estado == 'Pendiente')
+                                                    <form method="POST" action="{{ route('real_prestacion_externo.borrar', $archivo->id) }}" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas borrar este archivo?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-danger">
@@ -83,8 +83,8 @@
                                                     </form>
                                                 @endif
 
-                                                @if(auth()->user()->permiso == 'autorizar' && $archivo->estado == 'pendiente')
-                                                    <form method="POST" action="{{ route('real_prestacion.autorizar', $archivo->id) }}" class="d-inline ms-2">
+                                                @if(auth()->user()->permiso == 'autorizar' && $archivo->estado == 'Pendiente')
+                                                    <form method="POST" action="{{ route('real_prestacion_externo.autorizar', $archivo->id) }}" class="d-inline ms-2">
                                                         @csrf
                                                         <button type="submit" class="btn btn-sm btn-success">
                                                             <i class="bi bi-check-circle me-1"></i> Autorizar
@@ -92,7 +92,7 @@
                                                     </form>
                                                 @endif
 
-                                                @if(!in_array(auth()->user()->permiso, ['editar', 'autorizar']) || $archivo->estado != 'pendiente')
+                                                @if(!in_array(auth()->user()->permiso, ['editar', 'autorizar']) || $archivo->estado != 'Pendiente')
                                                     <span class="text-muted">No disponible</span>
                                                 @endif
                                             </td>
