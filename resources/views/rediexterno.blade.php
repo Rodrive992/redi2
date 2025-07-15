@@ -47,7 +47,11 @@
                                         </div>
                                         <h5 class="card-title">Asistencia</h5>
                                         <p class="card-text">Control de asistencia</p>
-                                        <a href="{{ route('herramientas.asistencia_externo') }}" class="btn btn-danger stretched-link">Acceder</a>
+                                        @if(Auth::user()->desempenio === 'unai')
+                                            <a href="{{ route('herramientas.asistencia_externo_uai') }}" class="btn btn-danger stretched-link">Acceder</a>
+                                        @else
+                                            <a href="{{ route('herramientas.asistencia_externo') }}" class="btn btn-danger stretched-link">Acceder</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

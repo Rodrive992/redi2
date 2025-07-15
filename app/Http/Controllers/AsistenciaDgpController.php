@@ -38,6 +38,10 @@ class AsistenciaDgpController extends Controller
             'nombres' => $datos['nombres']
         ]);
     }
+    public function indexUai()
+    {
+        return view('herramientas.asistencia_externo_uai');
+    }
     public function consultarInformeUai(Request $request)
     {
         $request->validate([
