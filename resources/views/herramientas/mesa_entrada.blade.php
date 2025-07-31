@@ -302,7 +302,7 @@
     function manejarEdicion(docId) {
         console.log(`Iniciando edición para documento ID: ${docId}`);
         
-        fetch(`/mesa/editar/${docId}`, {
+       fetch(`{{ url('redi-dgp/mesa/editar') }}/${docId}`,  {
             headers: {
                 'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
@@ -323,7 +323,7 @@
             document.getElementById('editar_entregado_a').value = data.entregado_a;
             
             // Configurar la acción del formulario
-            document.getElementById('editarForm').action = `/mesa/actualizar/${data.id}`;
+            document.getElementById('editarForm').action = `{{ url('redi-dgp/mesa/actualizar') }}/${data.id}`;
             
             // Mostrar el modal usando el método nativo de Bootstrap
             var modalEl = document.getElementById('editarModal');
@@ -355,7 +355,7 @@
             if (result.isConfirmed) {
                 console.log(`Eliminando documento ID: ${docId}`);
                 
-                fetch(`/mesa/eliminar/${docId}`, {
+                fetch(`{{ url('redi-dgp/mesa/eliminar') }}/${docId}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
