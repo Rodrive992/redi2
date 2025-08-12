@@ -15,17 +15,24 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validar campos
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'cuil' => 'required|string', // Cambiado de email a cuil
+            'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        // Intentar autenticación usando cuil
+        if (Auth::attempt([
+            'cuil' => $credentials['cuil'],
+            'password' => $credentials['password']
+        ], $request->remember)) {
+            
             $request->session()->regenerate();
             
             /** @var \App\Models\User $user */
-            $user = Auth::user(); // Esta anotación ayuda al IDE
-            
+            $user = Auth::user();
+
+            // Redirección según dependencia
             if ($user->dependencia === 'dgp') {
                 return redirect()->intended(route('redidgp'));
             }
@@ -33,8 +40,9 @@ class AuthController extends Controller
             return redirect()->intended(route('redi.externo'));
         }
 
+        // Si falla, mostrar mensaje de error
         throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
+            'cuil' => __('auth.failed'),
         ]);
     }
 

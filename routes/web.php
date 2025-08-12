@@ -15,6 +15,7 @@ use App\Http\Controllers\CargarBaseUncaController;
 use App\Http\Controllers\CargarBaseRelojesController;
 use App\Http\Controllers\CargarBaseEduProvController;
 use App\Http\Controllers\ProcedimientosController;
+use App\Http\Controllers\UsuariosController;
 //____REDI EXTERNO____
 use App\Http\Controllers\HerramientasExternoController;
 use App\Http\Controllers\AsistenciaExternoController;
@@ -74,6 +75,13 @@ Route::middleware(['auth', 'dependencia'])->group(function () {
             Route::post('/subir-archivo', [RealPrestacionController::class, 'subirArchivo'])->name('real_prestacion.subir_archivo');
             Route::delete('/borrar/{id}', [RealPrestacionHistorialController::class, 'borrar'])->name('real_prestacion.borrar');
             Route::post('/autorizar/{id}', [RealPrestacionHistorialController::class, 'autorizar'])->name('real_prestacion.autorizar');            
+        });
+
+        Route::prefix('usuarios')->group(function () {          
+            Route::get('/panel-de-control', [UsuariosController::class, 'index'])->name('herramientas.usuarios_panel_control');
+            Route::post('/crear', [UsuariosController::class, 'crear'])->name('usuarios.crear');
+            Route::post('/actualizar', [UsuariosController::class, 'actualizar'])->name('usuarios.actualizar');
+            Route::post('/eliminar', [UsuariosController::class, 'eliminar'])->name('usuarios.eliminar');            
         });
 
 

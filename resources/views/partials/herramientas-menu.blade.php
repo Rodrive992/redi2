@@ -13,7 +13,8 @@
             'real_prestacion_historial' => ['icon' => 'bi-graph-up', 'text' => 'Real Prestación'],
             'consultar_bases' => ['icon' => 'bi-clipboard-check', 'text' => 'Consultar Bases'],
             'carga_bases' => ['icon' => 'bi-database', 'text' => 'Carga de Bases'],
-            'suma_horarios' => ['icon' => 'bi-calculator', 'text' => 'Suma Horarios']
+            'suma_horarios' => ['icon' => 'bi-calculator', 'text' => 'Suma Horarios'],
+            'usuarios_panel_control' => ['icon' => 'bi-person', 'text' => 'Usuarios']
         ] as $route => $options)
             <li>
                 <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route("herramientas.$route") }}">
